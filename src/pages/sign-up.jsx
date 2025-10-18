@@ -71,7 +71,7 @@ export function SignUp() {
       <br />
       <br />
         <video
-          src="public/img/hello animation.mp4"
+          src="/img/hello animation.mp4"
           controls
           className="h-full w-full object-cover rounded-3xl"
           autoPlay
