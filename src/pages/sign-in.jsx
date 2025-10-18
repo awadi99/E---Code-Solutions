@@ -5,39 +5,40 @@ import { Link, useNavigate } from "react-router-dom";
 export function SignIn() {
   const navigate = useNavigate();
   const [data, setData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false); // Added loading state
 
   const handValue = (event) => {
     const { name, value } = event.target;
     setData({ ...data, [name]: value });
-  }
+  };
 
-const sendData = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sign-in`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+  const sendData = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Start loading
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sign-in`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    if (res.ok) {
-      localStorage.setItem("user", JSON.stringify(result.data));
-      alert(result.msg);
-      setData({ email: "", password: "" });
-      navigate("/home");
-    } else {
-      alert(result.msg);
+      if (res.ok) {
+        localStorage.setItem("user", JSON.stringify(result.data));
+        alert(result.msg);
+        setData({ email: "", password: "" });
+        navigate("/home");
+      } else {
+        alert(result.msg);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false); // Stop loading
     }
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <section className="m-8 flex gap-4">
@@ -81,23 +82,24 @@ const sendData = async (e) => {
             }
             containerProps={{ className: "-ml-2.5" }}
           />
-          <Button className="mt-6 animate-bounce" fullWidth type="submit">Sign In</Button>
+          <Button className="mt-6 animate-bounce" fullWidth type="submit" disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
+          </Button>
           <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
             Not registered?
             <Link to="/sign-up" className="text-gray-900 ml-1">Create account</Link>
           </Typography>
 
           <Link to="/" className="text-gray-900 ml-1">
-          <Button className="mt-6"fullWidth >
-            back
-          </Button>
+            <Button className="mt-6" fullWidth>
+              back
+            </Button>
           </Link>
-
         </form>
       </div>
       <div className="mt-20 mr-10 w-2/5 h-full hidden lg:block ">
-      <br />
-      <br />
+        <br />
+        <br />
         <video
           src="/img/hello animation.mp4"
           controls
