@@ -16,6 +16,9 @@ export function AddProducts() {
         image: null, // store base64
     });
 
+    // Get API base URL from environment variables
+    const API_URL = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
         if (user && user.role === "User") {
@@ -30,7 +33,7 @@ export function AddProducts() {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch("http://localhost:5000/api/items");
+            const res = await fetch(`${API_URL}/api/items`);
             const data = await res.json();
 
             // get current user
@@ -43,7 +46,6 @@ export function AddProducts() {
             console.error(err);
         }
     };
-
 
     if (!userRole) return null;
 
@@ -69,7 +71,7 @@ export function AddProducts() {
 
         try {
             const user = JSON.parse(localStorage.getItem("user"));
-            const res = await fetch("http://localhost:5000/api/addproducts", {
+            const res = await fetch(`${API_URL}/api/addproducts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...newProduct, userId: user._id }),
@@ -90,7 +92,7 @@ export function AddProducts() {
 
     const handleDeleteProduct = async (id) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            const res = await fetch(`${API_URL}/api/products/${id}`, {
                 method: "DELETE",
             });
             if (res.ok) {
@@ -102,8 +104,6 @@ export function AddProducts() {
             console.error(err);
         }
     };
-
-
 
     return (
         <>
