@@ -7,13 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItem } from "../redux/slice";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export function Items() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [sellers, setSellers] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));
@@ -21,32 +24,41 @@ export function Items() {
       navigate("/sign-in");
       return;
     }
-
     if (loggedUser.role === "User") {
       navigate("/"); // redirect to home or another page
       return;
     }
-
     setUser(loggedUser);
   }, [navigate]);
 
   useEffect(() => {
     const fetchUserProducts = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`${API_URL}/api/items`);
-        const products = await res.json();
-        setProducts(products);
+        const productsData = await res.json();
+        setProducts(productsData);
 
-        products.forEach(async (product) => {
-          const sellerRes = await fetch(`${API_URL}/api/user/${product.createdBy}`);
-          const sellerData = await sellerRes.json();
-          setSellers((prev) => ({
-            ...prev,
-            [product.createdBy]: sellerData,
-          }));
+        // Fetch all sellers data concurrently, but only unique seller IDs
+        const uniqueSellerIds = [...new Set(productsData.map(p => p.createdBy))];
+        const sellersData = await Promise.all(
+          uniqueSellerIds.map(async (sellerId) => {
+            const sellerRes = await fetch(`${API_URL}/api/user/${sellerId}`);
+            return sellerRes.ok ? await sellerRes.json() : null;
+          })
+        );
+
+        // Map sellers by their IDs
+        const sellersMap = {};
+        uniqueSellerIds.forEach((id, idx) => {
+          if (sellersData[idx]) sellersMap[id] = sellersData[idx];
         });
+
+        setSellers(sellersMap);
       } catch (err) {
         console.error("Error fetching products or sellers:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -73,8 +85,6 @@ export function Items() {
   };
 
   if (!user) return null;
-
-  const dispatch = useDispatch();
 
   return (
     <>
@@ -117,53 +127,66 @@ export function Items() {
 
           {/* User's Products */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-32">
-            {products.length > 0 ? (
-           products.map(({ _id, title, image, rating, price, condition, createdBy }) => (
-    <div key={_id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-      <img className="p-8 rounded-t-lg" src={image || "/img/default.png"} alt={title} />
-      <div className="px-5 pb-5">
-        <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          {title}
-        </h5>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-          Condition: <span className="font-medium text-gray-900 dark:text-white">{condition}</span>
-        </p>
+            {loading ? (
+              <p className="text-center col-span-3 mt-10">Loading products...</p>
+            ) : products.length > 0 ? (
+              products.map(({ _id, title, image, rating, price, condition, createdBy }) => (
+                <div
+                  key={_id}
+                  className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <img
+                    className="p-8 rounded-t-lg"
+                    src={image || "/img/default.png"}
+                    alt={title}
+                  />
+                  <div className="px-5 pb-5">
+                    <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                      {title}
+                    </h5>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                      Condition:{" "}
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {condition}
+                      </span>
+                    </p>
 
-        {/* Add creator info here */}
-        {createdBy && sellers[createdBy] && (
-          <p className="text-xs text-gray-700">
-            Seller : {sellers[createdBy].name} 
-            <br />
-            <br />
-            Email : {sellers[createdBy].email}
-          </p>
-        )}
+                    {/* Seller info */}
+                    {createdBy && sellers[createdBy] && (
+                      <p className="text-xs text-gray-700">
+                        Seller: {sellers[createdBy].name}
+                        <br />
+                        Email: {sellers[createdBy].email}
+                      </p>
+                    )}
 
-        <div className="flex items-center mt-2.5 mb-5">
-          {/* rating stars as you have */}
-          {/* ... */}
-        </div>
+                    {/* Rating stars placeholder */}
+                    <div className="flex items-center mt-2.5 mb-5">
+                      {/* You can add rating stars here */}
+                    </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{price}</span>
-          <button
-            onClick={() => {
-              handleAddToCart({ _id, title, image, rating, price, condition,createdBy });
-              dispatch(addItem(1));
-            }}
-            className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-          >
-            Add to cart
-          </button>
-        </div>
-      </div>
-    </div>
-  ))
-) : (
-  <p className="text-center text-gray-500 col-span-3 mt-10">
-    No products found. Add your items to see them here.
-  </p>
-)}
+                    <div className="flex items-center justify-between">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                        ₹{price}
+                      </span>
+                      <button
+                        onClick={() => {
+                          handleAddToCart({ _id, title, image, rating, price, condition, createdBy });
+                          dispatch(addItem(1));
+                        }}
+                        className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                      >
+                        Add to cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 col-span-3 mt-10">
+                                No products found. Add your items to see them here.
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -176,3 +199,4 @@ export function Items() {
 }
 
 export default Items;
+
