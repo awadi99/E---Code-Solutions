@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Navbar as MTNavbar,
   MobileNav,
@@ -9,12 +9,12 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import {ShoppingCartIcon}from "@heroicons/react/24/outline"
-import { useDispatch, useSelector } from "react-redux";
-
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
 
 export function Navbar({ brandName, routes, action }) {
   const [openNav, setOpenNav] = React.useState(false);
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user")); // get user info
 
   React.useEffect(() => {
@@ -25,7 +25,7 @@ export function Navbar({ brandName, routes, action }) {
   }, []);
 
   const navList = (
-    <ul className=" ml-14 mb-4 mt-2 flex flex-col gap-2 text-inherit lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+    <ul className="ml-14 mb-4 mt-2 flex flex-col gap-2 text-inherit lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       {routes
         .filter(({ name }) => {
           // hide Sign Up / Sign In
@@ -34,25 +34,24 @@ export function Navbar({ brandName, routes, action }) {
           // hide Items if logged-in user is not Customer/Company
           if (name.toLowerCase() === "products") {
             if (!user) return true; // show Items if not logged in
-           return user.role === "Customer" || user.role === "Company";
+            return user.role === "Customer" || user.role === "Company";
           }
 
           if (name.toLowerCase() === "store") {
-          if (!user) return true; // show Items if not logged in
-           return user.role === "Customer" || user.role === "Company";
-          }
-              
-          if (name.toLowerCase() === "invoice") {
-          if (!user) return true; // show Items if not logged in
-           return user.role === "Customer" || user.role === "Company";
+            if (!user) return true; // show Items if not logged in
+            return user.role === "Customer" || user.role === "Company";
           }
 
-            if (name.toLowerCase() === "add new products") {
-          if (!user) return true; // show Items if not logged in
-          return user.role === "User";
+          if (name.toLowerCase() === "invoice") {
+            if (!user) return true; // show Items if not logged in
+            return user.role === "Customer" || user.role === "Company";
+          }
+
+          if (name.toLowerCase() === "add new products") {
+            if (!user) return true; // show Items if not logged in
+            return user.role === "User";
           }
           return true;
-
         })
         .map(({ name, path, icon, href, target }) => (
           <Typography
@@ -92,9 +91,7 @@ export function Navbar({ brandName, routes, action }) {
     </ul>
   );
 
-
-  const myselect = useSelector((state)=>state.cart.value);
-
+  const myselect = useSelector((state) => state.cart.value);
 
   return (
     <MTNavbar color="transparent" className="p-3">
@@ -117,7 +114,12 @@ export function Navbar({ brandName, routes, action }) {
             </>
           ) : (
             <>
-              <Button className="text-white font-bold animate-pulse" size="sm" variant="text" color="white">
+              <Button
+                className="text-white font-bold animate-pulse"
+                size="sm"
+                variant="text"
+                color="white"
+              >
                 {user.name || user.email}
               </Button>
               <Button
@@ -126,7 +128,7 @@ export function Navbar({ brandName, routes, action }) {
                 color="white"
                 onClick={() => {
                   localStorage.removeItem("user");
-                  window.location.reload();
+                  navigate("/home"); // Redirect to home instead of reload
                 }}
               >
                 Logout
@@ -135,9 +137,11 @@ export function Navbar({ brandName, routes, action }) {
           )}
           {user && (user.role === "Customer" || user.role === "Company") && (
             <div className="hidden gap-2 lg:flex ml-10">
-              <Link to="/store" className="flex items-center text-white">
-                <ShoppingCartIcon className="h-6 w-6 mr-2 hover:text-gray-300 "></ShoppingCartIcon>
-                 <div className="absolute top-6 right-7 text-black bg-white size-4 rounded-full text-xs text-center"> {myselect} </div>
+              <Link to="/store" className="flex items-center text-white relative">
+                <ShoppingCartIcon className="h-6 w-6 mr-2 hover:text-gray-300" />
+                <div className="absolute top-6 right-7 text-black bg-white size-4 rounded-full text-xs text-center">
+                  {myselect}
+                </div>
               </Link>
             </div>
           )}
@@ -158,10 +162,10 @@ export function Navbar({ brandName, routes, action }) {
       </div>
 
       <MobileNav
-        className="rounded-xl bg-white px-4 pt-2 pb-4 text-blue-gray-900 "
+        className="rounded-xl bg-white px-4 pt-2 pb-4 text-blue-gray-900"
         open={openNav}
       >
-        <div className="container mx-auto ">
+        <div className="container mx-auto">
           {navList}
           {!user ? (
             <>
@@ -183,7 +187,7 @@ export function Navbar({ brandName, routes, action }) {
                 fullWidth
                 onClick={() => {
                   localStorage.removeItem("user");
-                  window.location.reload();
+                  navigate("/home"); // Redirect to home instead of reload
                 }}
               >
                 Logout
@@ -196,11 +200,11 @@ export function Navbar({ brandName, routes, action }) {
   );
 }
 
-Navbar.defaultProps = { 
+Navbar.defaultProps = {
   brandName: "E - Code Solutions",
   action: (
     <Link to="/sign-up">
-      <Button  variant="gradient" size="sm" fullWidth>
+      <Button variant="gradient" size="sm" fullWidth>
         Sign up
       </Button>
     </Link>
