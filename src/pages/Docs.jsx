@@ -105,7 +105,7 @@ export function Docs() {
                     {/* Right Column: Image */}
                     <div className="w-full md:w-6/12 flex justify-center">
                         <video
-                            src="public/img/video.mp4"
+                            src="/img/video.mp4"
                             controls
                             className="rounded-lg shadow-lg w-full max-w-md"
                             autoPlay
