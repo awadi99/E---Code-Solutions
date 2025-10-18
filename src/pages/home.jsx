@@ -39,28 +39,34 @@ export function Home() {
 
 const sendValue = async (e) => {
   e.preventDefault();
+
+  const { name, email, message } = data;
+  if (!name || !email || !message) {
+    return alert("Please fill in all the fields.");
+  }
+
+  setLoading(true); // Start loading
   try {
     const res = await fetch(`${API_URL}/api/contact`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
     const result = await res.json();
     if (res.ok) {
-      alert(result.msg);
+      alert(result.msg || "Message sent successfully!");
       setData({ name: "", email: "", message: "" });
     } else {
-      alert(result.msg);
+      alert(result.msg || "Failed to send message.");
     }
   } catch (err) {
-    console.log(err);
-    alert("Something went wrong");
+    console.error(err);
+    alert("Something went wrong.");
+  } finally {
+    setLoading(false); // End loading
   }
 };
-
   return (
     <>
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
