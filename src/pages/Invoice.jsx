@@ -8,13 +8,13 @@ import { Footer } from "@/widgets/layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 export function Invoice() {
     const navigate = useNavigate();
     const location = useLocation();
     const product = location.state?.product;
     const [user, setUser] = useState(null);
-
-    // ✅ NEW: creator state
     const [creator, setCreator] = useState(null);
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export function Invoice() {
             if (product?.createdBy) {
                 try {
                     const response = await fetch(
-                        `http://localhost:5000/api/user/${product.createdBy}`
+                        `${API_URL}/api/user/${product.createdBy}`
                     );
                     if (!response.ok) {
                         throw new Error("Failed to fetch creator");
