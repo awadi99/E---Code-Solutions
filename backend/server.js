@@ -18,10 +18,10 @@ const app = express();
 const PORT =process.env.PORT || 5000;
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://your-frontend.vercel.app",       // <-- Replace with your actual deployed frontend URL
-  "https://your-frontend.onrender.com"
+  "http://localhost:5173",                  // local dev
+  "https://e-code-solutions-srr9.onrender.com"  // your actual frontend URL
 ];
+
 
 app.use(cors({
   origin: (origin, callback) => {
