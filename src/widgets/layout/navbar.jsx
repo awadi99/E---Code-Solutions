@@ -137,7 +137,7 @@ export function Navbar({ brandName, routes, action }) {
           )}
           {user && (user.role === "Customer" || user.role === "Company") && (
             <div className="hidden gap-2 lg:flex ml-10">
-              <Link to="/store" className="flex items-center text-white relative">
+              <Link to="/store" className="flex items-center text-white">
                 <ShoppingCartIcon className="h-6 w-6 mr-2 hover:text-gray-300" />
                 <div className="absolute top-6 right-7 text-black bg-white size-4 rounded-full text-xs text-center">
                   {myselect}
