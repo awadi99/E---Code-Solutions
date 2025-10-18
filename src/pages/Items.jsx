@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItem } from "../redux/slice";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 export function Items() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
-  const [sellers, setSellers] = useState([]);
-
+  const [sellers, setSellers] = useState({});
 
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));
@@ -27,66 +28,53 @@ export function Items() {
     }
 
     setUser(loggedUser);
-    fetchUserProducts(loggedUser._id);
   }, [navigate]);
 
+  useEffect(() => {
+    const fetchUserProducts = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/items`);
+        const products = await res.json();
+        setProducts(products);
 
-  const fetchUserProducts = async (userId) => {
-  try {
-    const res = await fetch(`http://localhost:5000/api/items`);
-    const data = await res.json();
-    console.log(data);
-    setProducts(data);
-  } catch (err) {
-    console.error("Error fetching products:", err);
-  }
-};
+        products.forEach(async (product) => {
+          const sellerRes = await fetch(`${API_URL}/api/user/${product.createdBy}`);
+          const sellerData = await sellerRes.json();
+          setSellers((prev) => ({
+            ...prev,
+            [product.createdBy]: sellerData,
+          }));
+        });
+      } catch (err) {
+        console.error("Error fetching products or sellers:", err);
+      }
+    };
 
-useEffect(() => {
-  const fetchUserProducts = async () => {
-    const res = await fetch("http://localhost:5000/api/items");
-    const products = await res.json();
-    setProducts(products);
+    fetchUserProducts();
+  }, []);
 
-    // Fetch seller info for each product
-    products.forEach(async (product) => {
-      const sellerRes = await fetch(`http://localhost:5000/api/user/${product.createdBy}`);
-      const sellerData = await sellerRes.json();
-      setSellers((prev) => ({
-        ...prev,
-        [product.createdBy]: sellerData,
-      }));
-    });
+  const handleAddToCart = (product) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user._id) return alert("You must be logged in");
+
+    const allCarts = JSON.parse(localStorage.getItem("allCarts")) || {};
+    const userCart = allCarts[user._id] || [];
+
+    const alreadyAdded = userCart.find((item) => item._id === product._id);
+    if (alreadyAdded) {
+      return alert("Product already in cart");
+    }
+
+    userCart.push(product);
+    allCarts[user._id] = userCart;
+
+    localStorage.setItem("allCarts", JSON.stringify(allCarts));
+    alert("Product added to cart!");
   };
-
-  fetchUserProducts();
-}, []);
-
-
-const handleAddToCart = (product) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user || !user._id) return alert("You must be logged in");
-
-  const allCarts = JSON.parse(localStorage.getItem("allCarts")) || {};
-  const userCart = allCarts[user._id] || [];
-
-  // Prevent duplicates
-  const alreadyAdded = userCart.find((item) => item._id === product._id);
-  if (alreadyAdded) {
-    return alert("Product already in cart");
-  }
-
-  userCart.push(product);
-  allCarts[user._id] = userCart;
-
-  localStorage.setItem("allCarts", JSON.stringify(allCarts));
-  alert("Product added to cart!");
-};
 
   if (!user) return null;
 
-
-  const dispatch =useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <>
