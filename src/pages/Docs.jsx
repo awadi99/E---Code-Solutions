@@ -10,12 +10,13 @@ import {
 import { PageTitle, Footer } from "@/widgets/layout";
 
 export function Docs() {
-
     const [data, setData] = useState({
         name: "",
         email: "",
         idea: ""
     });
+
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
     const handlingValue = (event) => {
         const { name, value } = event.target;
@@ -25,7 +26,7 @@ export function Docs() {
     const SendValue = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:5000/api/docs", {
+            const res = await fetch(`${API_URL}/api/docs`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -40,16 +41,12 @@ export function Docs() {
             }
             else {
                 alert(result.msg);
-
             }
-        }catch(err)
-        {
+        } catch (err) {
             console.log(err);
             alert("something went worng");
         }
     }
-
-
 
     return (
         <>
