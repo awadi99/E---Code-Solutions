@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     Typography,
     Button,
@@ -16,12 +15,13 @@ export function Docs() {
         idea: ""
     });
 
-    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    // Use VITE_API_URL from .env file or fallback to localhost
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     const handlingValue = (event) => {
         const { name, value } = event.target;
         setData({ ...data, [name]: value });
-    }
+    };
 
     const SendValue = async (e) => {
         e.preventDefault();
@@ -44,9 +44,9 @@ export function Docs() {
             }
         } catch (err) {
             console.log(err);
-            alert("something went worng");
+            alert("Something went wrong");
         }
-    }
+    };
 
     return (
         <>
@@ -71,12 +71,8 @@ export function Docs() {
                 </div>
             </div>
 
-            <br />
-            <br />
+            <br /><br /><br /><br /><br /><br />
 
-            <br />
-            <br /><br />
-            <br />
             {/* Why It Matters */}
             <section className="-mt-32 bg-white px-4 py-20">
                 <div className="container mx-auto flex flex-col md:flex-row items-center gap-10">
@@ -106,13 +102,11 @@ export function Docs() {
                             controls
                             className="rounded-lg shadow-lg w-full max-w-md"
                             autoPlay
-                            // loop
                             muted
                         />
                     </div>
                 </div>
             </section>
-
 
             {/* Key Features and Workflow */}
             <section className="bg-gray-50 px-4 py-16">
