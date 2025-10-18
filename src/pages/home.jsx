@@ -35,30 +35,31 @@ export function Home() {
     setData({ ...data, [name]: value });
   }
 
-  const sendValue = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-      const result = await res.json();
-      if (res.ok) {
-        alert(result.msg)
-        setData({ name: "", email: "", message: "" });
-      } else {
-        alert(result.msg);
-      }
+const sendValue = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await fetch(`${API_URL}/api/contact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-    } catch (err) {
-      console.log(err);
-      alert("Something went wrong");
+    const result = await res.json();
+    if (res.ok) {
+      alert(result.msg);
+      setData({ name: "", email: "", message: "" });
+    } else {
+      alert(result.msg);
     }
+  } catch (err) {
+    console.log(err);
+    alert("Something went wrong");
   }
+};
 
   return (
     <>
