@@ -21,7 +21,7 @@ export function Profile() {
               <div className="relative flex gap-6 items-start">
                 <div className="-mt-20 w-40">
                   <Avatar
-                    src="public\img\WhatsApp Image 2025-10-11 at 19.48.23_9b73135b.jpg"
+                    src="/img/WhatsApp Image 2025-10-11 at 19.48.23_9b73135b.jpg"
                     alt="Profile picture"
                     variant="circular"
                     className="h-full w-full animate-bounce"
