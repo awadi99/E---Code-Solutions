@@ -11,31 +11,33 @@ export function SignIn() {
     setData({ ...data, [name]: value });
   }
 
-  const sendData = async (e) => {
-    e.preventDefault();
-    try {
-const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sign-in`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(data),
-});
+const sendData = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sign-in`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
+    const result = await res.json();
 
-      const result = await res.json();
-      if (res.ok) {
-        // Save user info to localStorage
-        localStorage.setItem("user", JSON.stringify(result.data));
-        alert(result.msg);
-        setData({ email: "", password: "" });
-        navigate("/home"); // redirect to home page
-      } else {
-        alert(result.msg);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
+    if (res.ok) {
+      localStorage.setItem("user", JSON.stringify(result.data));
+      alert(result.msg);
+      setData({ email: "", password: "" });
+      navigate("/home");
+    } else {
+      alert(result.msg);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <section className="m-8 flex gap-4">
