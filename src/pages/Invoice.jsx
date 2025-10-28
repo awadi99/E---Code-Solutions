@@ -14,7 +14,7 @@ export function Invoice() {
     const product = location.state?.product;
     const [user, setUser] = useState(null);
 
-    // ✅ NEW: creator state
+
     const [creator, setCreator] = useState(null);
 
     useEffect(() => {
