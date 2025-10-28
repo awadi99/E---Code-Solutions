@@ -32,61 +32,61 @@ export function Items() {
 
 
   const fetchUserProducts = async (userId) => {
-  try {
-    const res = await fetch(`http://localhost:5000/api/items`);
-    const data = await res.json();
-    console.log(data);
-    setProducts(data);
-  } catch (err) {
-    console.error("Error fetching products:", err);
-  }
-};
-
-useEffect(() => {
-  const fetchUserProducts = async () => {
-    const res = await fetch("http://localhost:5000/api/items");
-    const products = await res.json();
-    setProducts(products);
-
-    // Fetch seller info for each product
-    products.forEach(async (product) => {
-      const sellerRes = await fetch(`http://localhost:5000/api/user/${product.createdBy}`);
-      const sellerData = await sellerRes.json();
-      setSellers((prev) => ({
-        ...prev,
-        [product.createdBy]: sellerData,
-      }));
-    });
+    try {
+      const res = await fetch(`http://localhost:5000/api/items`);
+      const data = await res.json();
+      console.log(data);
+      setProducts(data);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    }
   };
 
-  fetchUserProducts();
-}, []);
+  useEffect(() => {
+    const fetchUserProducts = async () => {
+      const res = await fetch("http://localhost:5000/api/items");
+      const products = await res.json();
+      setProducts(products);
+
+      // Fetch seller info for each product
+      products.forEach(async (product) => {
+        const sellerRes = await fetch(`http://localhost:5000/api/user/${product.createdBy}`);
+        const sellerData = await sellerRes.json();
+        setSellers((prev) => ({
+          ...prev,
+          [product.createdBy]: sellerData,
+        }));
+      });
+    };
+
+    fetchUserProducts();
+  }, []);
 
 
-const handleAddToCart = (product) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user || !user._id) return alert("You must be logged in");
+  const handleAddToCart = (product) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user._id) return alert("You must be logged in");
 
-  const allCarts = JSON.parse(localStorage.getItem("allCarts")) || {};
-  const userCart = allCarts[user._id] || [];
+    const allCarts = JSON.parse(localStorage.getItem("allCarts")) || {};
+    const userCart = allCarts[user._id] || [];
 
-  // Prevent duplicates
-  const alreadyAdded = userCart.find((item) => item._id === product._id);
-  if (alreadyAdded) {
-    return alert("Product already in cart");
-  }
+    // Prevent duplicates
+    const alreadyAdded = userCart.find((item) => item._id === product._id);
+    if (alreadyAdded) {
+      return alert("Product already in cart");
+    }
 
-  userCart.push(product);
-  allCarts[user._id] = userCart;
+    userCart.push(product);
+    allCarts[user._id] = userCart;
 
-  localStorage.setItem("allCarts", JSON.stringify(allCarts));
-  alert("Product added to cart!");
-};
+    localStorage.setItem("allCarts", JSON.stringify(allCarts));
+    alert("Product added to cart!");
+  };
 
   if (!user) return null;
 
 
-  const dispatch =useDispatch()
+  const dispatch = useDispatch()
 
   return (
     <>
@@ -130,52 +130,52 @@ const handleAddToCart = (product) => {
           {/* User's Products */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-32">
             {products.length > 0 ? (
-           products.map(({ _id, title, image, rating, price, condition, createdBy }) => (
-    <div key={_id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-      <img className="p-8 rounded-t-lg" src={image || "/img/default.png"} alt={title} />
-      <div className="px-5 pb-5">
-        <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          {title}
-        </h5>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-          Condition: <span className="font-medium text-gray-900 dark:text-white">{condition}</span>
-        </p>
+              products.map(({ _id, title, image, rating, price, condition, createdBy }) => (
+                <div key={_id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                  <img className="p-8 rounded-t-lg" src={image || "/img/default.png"} alt={title} />
+                  <div className="px-5 pb-5">
+                    <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                      {title}
+                    </h5>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                      Condition: <span className="font-medium text-gray-900 dark:text-white">{condition}</span>
+                    </p>
 
-        {/* Add creator info here */}
-        {createdBy && sellers[createdBy] && (
-          <p className="text-xs text-gray-700">
-            Seller : {sellers[createdBy].name} 
-            <br />
-            <br />
-            Email : {sellers[createdBy].email}
-          </p>
-        )}
+                    {/* Add creator info here */}
+                    {createdBy && sellers[createdBy] && (
+                      <p className="text-xs text-gray-700">
+                        Seller : {sellers[createdBy].name}
+                        <br />
+                        <br />
+                        Email : {sellers[createdBy].email}
+                      </p>
+                    )}
 
-        <div className="flex items-center mt-2.5 mb-5">
-          {/* rating stars as you have */}
-          {/* ... */}
-        </div>
+                    <div className="flex items-center mt-2.5 mb-5">
+                      {/* rating stars as you have */}
+                      {/* ... */}
+                    </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{price}</span>
-          <button
-            onClick={() => {
-              handleAddToCart({ _id, title, image, rating, price, condition,createdBy });
-              dispatch(addItem(1));
-            }}
-            className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-          >
-            Add to cart
-          </button>
-        </div>
-      </div>
-    </div>
-  ))
-) : (
-  <p className="text-center text-gray-500 col-span-3 mt-10">
-    No products found. Add your items to see them here.
-  </p>
-)}
+                    <div className="flex items-center justify-between">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{price}</span>
+                      <button
+                        onClick={() => {
+                          handleAddToCart({ _id, title, image, rating, price, condition, createdBy });
+                          dispatch(addItem(1));
+                        }}
+                        className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                      >
+                        Add to cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 col-span-3 mt-10">
+                No products found. Add your items to see them here.
+              </p>
+            )}
           </div>
         </div>
       </section>

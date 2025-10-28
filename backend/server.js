@@ -10,12 +10,12 @@ dotenv.config();
 
 // mongoose connected
 main().then((res) => {
-    console.log("connection successful");
+  console.log("connection successful");
 }).
-    catch(err => console.log(err));
+  catch(err => console.log(err));
 // express connect
 const app = express();
-const PORT =process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -38,110 +38,107 @@ app.use(express.json({ limit: "10mb" })); // increase limit to allow base64 imag
 
 
 app.listen(PORT, () => {
-    console.log("server working on this port");
+  console.log("server working on this port");
 });
 
 app.get("/", (req, res) => {
-    res.send("hellow react");
+  res.send("hellow react");
 })
 
 // post store data
 // contact 
 app.post("/api/contact", async (req, res) => {
-    try {
-        const { name, email, message } = req.body;
-        if (!name || !email || !message) {
-            return res.status(400).json({ msg: "please fill all fields" });
-        }
-        const newContact = new Contact({ name, email, message });
-        await newContact.save();
-        res.status(201).json({ msg: "Message sent Successfully", data: newContact });
+  try {
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ msg: "please fill all fields" });
     }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ msg: "server error" });
-    }
+    const newContact = new Contact({ name, email, message });
+    await newContact.save();
+    res.status(201).json({ msg: "Message sent Successfully", data: newContact });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "server error" });
+  }
 });
 
 // post data
 // docs
 app.post("/api/docs", async (req, res) => {
-    try {
-        const { name, email, idea } = req.body;
-        if (!name || !email || !idea) {
-            return res.status(400).json({ msg: "please fill all fields" });
-        }
-        const newDocs = new Docs({ name, email, idea });
-        await newDocs.save();
-        res.status(201).json({ msg: "Idea send Successfully", data: newDocs });
+  try {
+    const { name, email, idea } = req.body;
+    if (!name || !email || !idea) {
+      return res.status(400).json({ msg: "please fill all fields" });
     }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: "server error sorry for that" });
-    }
+    const newDocs = new Docs({ name, email, idea });
+    await newDocs.save();
+    res.status(201).json({ msg: "Idea send Successfully", data: newDocs });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "server error sorry for that" });
+  }
 })
 
 //  post 
 // sign-up
 app.post("/api/sign-up", async (req, res) => {
-    try{
+  try {
     const { name, email, password, role, companyName, agencyName, service } = req.body;
-    if(!name || !email || !password || !role)
-    {
-        return res.status(400).json({msg:"Please fill all required fields "});
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ msg: "Please fill all required fields " });
     }
 
-    const existingUser = await NewUser.findOne({email});
-    if(existingUser){
-        return res.status(400).json({msg:"User already exists"});
+    const existingUser = await NewUser.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ msg: "User already exists" });
     }
 
     const newUser = new NewUser({
-        name,
-        email,
-        password,
-        role,
-        companyName,
-        agencyName,
-        service,
+      name,
+      email,
+      password,
+      role,
+      companyName,
+      agencyName,
+      service,
     });
 
     await newUser.save();
 
     res.status(201).json({
-        msg:"User Registered successfully",
-        data:newUser,
+      msg: "User Registered successfully",
+      data: newUser,
     });
-    }catch(err){
-        console.error(err);
-        res.status(500).json({msg:"Server error . please try again later"});
-    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error . please try again later" });
+  }
 });
 
 
 // check sign-in 
 // post 
 
-app.post("/api/sign-in", async (req,res)=>{
-    try{
-        const {email,password}=req.body;
-        if(!email || !password)
-        {
-            return res.status(400).json({msg:"please provide email and password "});
-        }
-        const checkuser = await NewUser.findOne({email});
-        if(!checkuser)
-        {
-            return res.status(400).json({msg:"User dose not exist"});
-        }
-        if(checkuser.password !==password){
-            return res.status(400).json({msg:"Invaild Password"});
-        }
-        return res.status(200).json({msg:"Login successful ", data: checkuser});
-    }catch(err){
-        console.error(err);
-        res.status(500).json({msg:"Server error"});
+app.post("/api/sign-in", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ msg: "please provide email and password " });
     }
+    const checkuser = await NewUser.findOne({ email });
+    if (!checkuser) {
+      return res.status(400).json({ msg: "User dose not exist" });
+    }
+    if (checkuser.password !== password) {
+      return res.status(400).json({ msg: "Invaild Password" });
+    }
+    return res.status(200).json({ msg: "Login successful ", data: checkuser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
 
@@ -174,14 +171,14 @@ app.post("/api/addproducts", async (req, res) => {
 
 
 
-app.get("/api/items",async (req,res)=>{
-    try {
-        const product = await ProductData.find().sort({createdAt:-1});
-        res.status(200).json(product);
-    }catch(err){
-        console.error(err);
-        res.status(500).json({msg:"Server error while fetching products"});
-    }
+app.get("/api/items", async (req, res) => {
+  try {
+    const product = await ProductData.find().sort({ createdAt: -1 });
+    res.status(200).json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error while fetching products" });
+  }
 });
 
 
@@ -189,7 +186,7 @@ app.get("/api/items",async (req,res)=>{
 app.delete("/api/products/:id", async (req, res) => {
   try {
     const { id } = req.params;
-     await ProductData.findByIdAndDelete(id);
+    await ProductData.findByIdAndDelete(id);
     res.status(200).json({ msg: "Product deleted" });
   } catch (err) {
     console.error(err);
