@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import {ShoppingCartIcon}from "@heroicons/react/24/outline"
+import { ShoppingCartIcon } from "@heroicons/react/24/outline"
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -34,22 +34,22 @@ export function Navbar({ brandName, routes, action }) {
           // hide Items if logged-in user is not Customer/Company
           if (name.toLowerCase() === "products") {
             if (!user) return true; // show Items if not logged in
-           return user.role === "Customer" || user.role === "Company";
+            return user.role === "Customer" || user.role === "Company";
           }
 
           if (name.toLowerCase() === "store") {
-          if (!user) return true; // show Items if not logged in
-           return user.role === "Customer" || user.role === "Company";
-          }
-              
-          if (name.toLowerCase() === "invoice") {
-          if (!user) return true; // show Items if not logged in
-           return user.role === "Customer" || user.role === "Company";
+            if (!user) return true; // show Items if not logged in
+            return user.role === "Customer" || user.role === "Company";
           }
 
-            if (name.toLowerCase() === "add new products") {
-          if (!user) return true; // show Items if not logged in
-          return user.role === "User";
+          if (name.toLowerCase() === "invoice") {
+            if (!user) return true; // show Items if not logged in
+            return user.role === "Customer" || user.role === "Company";
+          }
+
+          if (name.toLowerCase() === "add new products") {
+            if (!user) return true; // show Items if not logged in
+            return user.role === "User";
           }
           return true;
 
@@ -93,7 +93,7 @@ export function Navbar({ brandName, routes, action }) {
   );
 
 
-  const myselect = useSelector((state)=>state.cart.value);
+  const myselect = useSelector((state) => state.cart.value);
 
 
   return (
@@ -137,7 +137,7 @@ export function Navbar({ brandName, routes, action }) {
             <div className="hidden gap-2 lg:flex ml-10">
               <Link to="/store" className="flex items-center text-white">
                 <ShoppingCartIcon className="h-6 w-6 mr-2 hover:text-gray-300 "></ShoppingCartIcon>
-                 <div className="absolute top-6 right-7 text-black bg-white size-4 rounded-full text-xs text-center"> {myselect} </div>
+                <div className="absolute top-6 right-7 text-black bg-white size-4 rounded-full text-xs text-center"> {myselect} </div>
               </Link>
             </div>
           )}
@@ -196,11 +196,11 @@ export function Navbar({ brandName, routes, action }) {
   );
 }
 
-Navbar.defaultProps = { 
+Navbar.defaultProps = {
   brandName: "E - Code Solutions",
   action: (
     <Link to="/sign-up">
-      <Button  variant="gradient" size="sm" fullWidth>
+      <Button variant="gradient" size="sm" fullWidth>
         Sign up
       </Button>
     </Link>
