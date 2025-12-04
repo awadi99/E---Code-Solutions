@@ -1,69 +1,90 @@
-🛒 E-Code Solutions – 🌿 E-Commerce Web Application
+# 🛒 E-Code Solutions – 🌿 E-Commerce Web Application
 
-E-Code Solutions is a full-stack E-Commerce web application built using the MERN stack (MongoDB, Express.js, React, Node.js).
-It allows Users to add products, while Customers and Companies can browse and purchase them with ease.                                  
+**E-Code Solutions** is a full-stack MERN (MongoDB, Express.js, React, Node.js) based  
+E-Commerce platform where **Users can sell electronic items**, and **Customers/Companies can buy, reuse, or recycle them**.
 
-🌱 This project aims to reduce electronic waste ♻️ by creating a platform where users can sell old electronic items 💻📱 and companies can buy, reuse, or recycle them.
-🌍 It helps protect the environment, save valuable materials 🛠️, and promote a cleaner and greener future 🌿✨.
-               
-🚀 Features
+This project aims to **reduce electronic waste ♻️** by encouraging responsible reselling and recycling of old devices.
 
-User Authentication – Secure login and signup
+---
 
-Role-Based Access
+## 🌍 Project Purpose
 
-🧑‍💻 User: Can add products
+- Reduce e-waste and promote sustainability  
+- Provide a platform to sell old electronics 💻📱  
+- Help companies reuse or recycle valuable components 🔧  
+- Support a cleaner, greener future 🌿✨  
 
-🏢 Company / Customer: Can view and buy products
+---
 
-Product Management – Add, view, and delete products
+## 🚀 Features
 
-Cart System – Add to cart, remove, and purchase products
+### 🔐 User Authentication  
+- Secure login & signup  
+- Role-based access
 
-Invoice Generation – Displays order details only to the user who purchased the product
+### 👥 User Roles  
+- 🧑‍💻 **User** → Add products  
+- 🏢 **Company / Customer** → Browse & purchase products  
 
-Local Storage Handling – Stores cart and user data separately for each account
+### 🛍️ E-Commerce Functionalities  
+- Product Management → Add, view, delete products  
+- Cart System → Add/remove items, purchase products  
+- Invoice Generation → Only visible to the buyer  
+- Local Storage Handling → Stores user/cart data separately  
+- Fully Responsive UI using **Material Tailwind + React**  
 
-Responsive Design – Fully responsive UI built with Material Tailwind and React
+---
 
-🧠 Technologies Used
+## 🧠 Technologies Used
 
-Frontend: React.js, Tailwind CSS, Material Tailwind
+### **Frontend**
+- React.js  
+- Tailwind CSS  
+- Material Tailwind  
+- Redux (state management)  
+- React Router DOM  
 
-Backend: Node.js, Express.js
+### **Backend**
+- Node.js  
+- Express.js  
 
-Database: MongoDB
+### **Database**
+- MongoDB / Mongoose  
 
-State Management: Redux
+---
 
-Routing: React Router DOM
+## 📂 Folder Structure
 
-🏃 How to Run
-1️⃣ Start the Backend
+```bash
+E-Code-Solutions/
+ ├── backend/
+ │     ├── controllers/
+ │     ├── models/
+ │     ├── routes/
+ │     ├── config/
+ │     └── server.js
+ │
+ └── frontend/
+       ├── src/
+       │    ├── components/
+       │    ├── pages/
+       │    ├── redux/
+       │    ├── assets/
+       │    └── App.jsx
+       └── package.json
+```
+## 🏃 How to Run the Project
+
+## ⚙️ Start Backend
+```bash
 cd backend
+npm install
 npm start
+```
 
-
-or (for development mode)
-
-npm run dev
-
-2️⃣ Start the Frontend
+## 💻 Start Frontend
+```bash
 cd frontend
+npm install
 npm start
-
-💡 How It Works
-
-Users can sign up or log in to access their role-based features.
-
-Users can add new products which become visible to all buyers.
-
-Customers and Companies can browse these products and add them to their cart.
-
-When a product is purchased, an invoice is generated and shown only to that specific user.
-
-Each user’s cart and invoices are private, ensuring secure access.
-
-📜 License
-
-This project is made for educational purposes and is open for learning and improvements.
+```
