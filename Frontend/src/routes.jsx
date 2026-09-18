@@ -1,11 +1,11 @@
-import { Home, Profile, SignIn, SignUp, Docs,Items,AddProducts,Store } from "@/pages";
+import { LandingPage, Profile, SignIn, SignUp, Docs,Items,AddProducts,Store } from "@/pages";
 import Invoice from "./pages/Invoice";
 
 export const routes = [
   {
     name: "home",
     path: "/home",
-    element: <Home />,
+    element: <LandingPage />,
   },
   {
     name: "profile",

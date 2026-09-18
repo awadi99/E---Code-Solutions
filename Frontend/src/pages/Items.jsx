@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "@material-tailwind/react";
 import { Footer } from "@/widgets/layout";
 import { FeatureCard } from "@/widgets/cards";
-import { featuresData } from "@/data";
+import { featuresData } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItem } from "../redux/slice";
