@@ -4,14 +4,13 @@ import Loading from "./components/common/Loading";
 
 // Lazy loaded pages
 const LandingPage = lazy(() => import("./pages/LandingPage"));
-const Profile = lazy(() => import("./pages/Profile"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const Docs = lazy(() => import("./pages/Docs"));
-const Items = lazy(() => import("./pages/Items"));
-const AddProducts = lazy(() => import("./pages/AddProducts"));
-const Store = lazy(() => import("./pages/Store"));
-const Invoice = lazy(() => import("./pages/Invoice"));
+// const Items = lazy(() => import("./pages/Items"));
+// const AddProducts = lazy(() => import("./pages/AddProducts"));
+// const Store = lazy(() => import("./pages/Store"));
+// const Invoice = lazy(() => import("./pages/Invoice"));
 
 export default function App() {
     return (
@@ -30,11 +29,6 @@ export default function App() {
                     element={<LandingPage />}
                 />
 
-                <Route
-                    path="/home"
-                    element={<LandingPage />}
-                />
-
                 {/* Authentication */}
                 <Route
                     path="/sign-in"
@@ -47,10 +41,7 @@ export default function App() {
                 />
 
                 {/* User */}
-                <Route
-                    path="/profile"
-                    element={<Profile />}
-                />
+
 
                 {/* Information */}
                 <Route
@@ -59,27 +50,27 @@ export default function App() {
                 />
 
                 {/* Products */}
-                <Route
+                {/* <Route
                     path="/items"
                     element={<Items />}
-                />
+                /> */}
 
-                <Route
+                {/* <Route
                     path="/addproducts"
                     element={<AddProducts />}
-                />
+                /> */}
 
                 {/* Store */}
-                <Route
+                {/* <Route
                     path="/store"
                     element={<Store />}
-                />
+                /> */}
 
                 {/* Invoice */}
-                <Route
+                {/* <Route
                     path="/invoice"
                     element={<Invoice />}
-                />
+                /> */}
 
                 {/* Unknown URL → Home */}
                 <Route
