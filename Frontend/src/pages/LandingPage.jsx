@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/LandingPage/NavBar';
 import Features from '../components/LandingPage/Feature';
 import Services from '../components/LandingPage/Services';
-// import FAQ from '../components/landingPage/FAQ';
 const Hero = lazy(() => import('../components/LandingPage/Hero'));
 const AboutUs = lazy(() => import('../components/LandingPage/AboutUs'));
 const ContactUs = lazy(() => import(('../components/LandingPage/ContactUs')));
-// import Footer from '../components/common/Footer';
+import Footer from '../components/common/Footer';
 // import { Helmet } from 'react-helmet-async';
 
 
@@ -23,6 +22,7 @@ export default function Landing() {
                 <Services/>
                 <AboutUs />
                 <ContactUs />
+                <Footer/>
             </main>
             {/* <Footer /> */}
         </div>
