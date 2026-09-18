@@ -8,7 +8,7 @@ export const aboutData = {
         "E-Code Solutions is an e-waste management platform that helps people responsibly manage their unwanted electronic devices through reuse, restoration, and recycling.",
 
     secondaryDescription:
-        "Our goal is to reduce electronic waste, recover valuable resources, and encourage a cleaner and more sustainable future.",
+        "Our goal is to reduce electronic waste, recover valuable resources, and encourage a cleaner and more sustainable future. ",
 
     image: "/image/nature.jpg",
 };
